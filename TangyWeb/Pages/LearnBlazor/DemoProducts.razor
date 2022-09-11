@@ -1,0 +1,65 @@
+@page "/DemoProducts"
+
+<h3 class="text-primary">Demo Product</h3>
+<h5 class="text-secondary">Favourite Count: @favouriteCount</h5>
+<h5 class="text-secondary">Product Selected: @productSelected</h5>
+
+<div class="row g-2">
+    @foreach (var p in @products)
+    {
+        <div class="col-6">
+            <_Product Product="@p" UpdateFavouriteCount = "@UpdateFavouriteCount" UpdateProductSelected = "@UpdateProductSelected">
+                <FirstFragment>#1</FirstFragment>
+                <SecondFragment>#2</SecondFragment>
+            </_Product>
+        </div>
+    }
+</div>
+
+
+@code
+{
+    int? productSelected;
+    int favouriteCount;
+    List<Product> products = new();
+    List<bool> showProperties = new();
+    protected override void OnInitialized()
+    {
+        products.Add(new()
+        {
+            Id = 111,
+            Name = "Ninetendo Switch",
+            Price = 38000m,
+            IsActive = true,
+            Properties = new()
+            {
+                new ProductProp { Id = 1, Name = "Storage", Value = "100 GB" },
+                new ProductProp { Id = 2, Name = "Memory", Value = "8 GB DDR4" },
+                new ProductProp { Id = 3, Name = "Drip", Value = "Red-Black" },
+            }
+        });
+
+        products.Add(new()
+        {
+            Id = 222,
+            Name = "XBox One X",
+            Price = 55000m,
+            IsActive = true,
+            Properties = new()
+            {
+                new ProductProp { Id = 1, Name = "Storage", Value = "1 TB" },
+                new ProductProp { Id = 2, Name = "Memory", Value = "16 GB DDR4" },
+                new ProductProp { Id = 3, Name = "Drip", Value = "Black" },
+            }
+        });
+    }
+
+    public void UpdateFavouriteCount(bool increaseCount)
+    {
+        favouriteCount += (increaseCount ? 1 : -1);
+    }
+    public void UpdateProductSelected(int productID)
+    {
+        productSelected = productID;
+    }
+}

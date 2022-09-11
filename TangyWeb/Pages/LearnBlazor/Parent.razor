@@ -1,0 +1,13 @@
+@page "/ParentChild"
+
+<h2 class="text-primary">Parent Component</h2>
+
+<CascadingValue Value="@GrandChildMsg" Name="Greet">
+    <_Child MsgFromParent="@ChildMsg"/>
+</CascadingValue>
+
+@code
+{
+    public string ChildMsg { get; set; } = "Hi there Child 😀";
+    public string GrandChildMsg { get; set; } = "Greetings Grandchild 😄";
+}

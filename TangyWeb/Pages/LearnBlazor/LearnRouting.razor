@@ -1,0 +1,31 @@
+@page "/LearnRouting"
+@page "/LearnRouting/{routeParam}"
+
+@using System.Collections.Specialized
+@using System.Web
+
+@inject NavigationManager _navigationManager
+
+<h2 class="text-primary">Routing Basics</h2>
+
+<p>Route Param: @RouteParam</p>
+<p>Query Param:</p>
+@foreach (string key in Queries.Keys)
+{
+    <p>@key : @Queries[key]</p>
+}
+
+<button class="btn btn-primary" @onclick="@HandleQueryLoad">Load Query</button>
+
+@code
+{
+    [Parameter]
+    public string RouteParam { get; set; }
+    public NameValueCollection Queries { get; set; } = new();
+
+    private void HandleQueryLoad()
+    {
+        var uri = new Uri(_navigationManager.Uri);
+        Queries = HttpUtility.ParseQueryString(uri.Query);   
+    }
+}

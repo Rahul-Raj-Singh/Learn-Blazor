@@ -1,0 +1,82 @@
+@page "/BindProps"
+
+<h3 class="text-success">Product Info - </h3>
+
+<div class="row border-bottom border-dark p-3 mb-3">
+    <div class="col-6">
+        <h4 class="text-primary">Product Playground</h4>
+        <hr>
+        <section class="p-2 mb-2">
+            <p>Price: <input type="number" @bind-value="@p.Price" @bind-value:event="oninput" /></p>
+            <p>Active: <input type="checkbox" @bind-value="@p.IsActive" checked="@p.IsActive" /></p>
+            <p>
+                <select @bind="@selectedProp">
+                    <option value="">(empty)</option>
+                    @foreach (var props in @p.Properties)
+                    {
+                        <option value="@props.Name">@props.Name</option>
+                    }
+                </select>
+            </p>
+        </section>
+    </div>
+    <div class="col-6 border-start">
+        <h4 class="text-primary">Product Summary</h4>
+        <hr>
+        <section class="p-2 mb-2">
+            <p>Name: @p.Name</p>
+            <p>Price: @p.Price</p>
+            <p>Active: @(p.IsActive ? "Active" : "InActive")</p>
+            <p>Property: @selectedProp</p>
+            <p>Property Value: @(p.Properties.FirstOrDefault(props => props.Name == selectedProp)?.Value)</p>
+        </section>
+    </div>
+</div>
+
+<h3 class="text-success">Products </h3>
+<div class="row mb-3">
+    <div class="col-6">
+
+        @foreach (var p in @products)
+        {
+            <div class="d-flex justify-content-between mb-1">
+                <input type="text" @bind-value="@p.Name">
+                <input type="number" @bind-value="@p.Price">
+                <input type="checkbox" @bind-value="@p.IsActive" checked="@p.IsActive">
+            </div>
+        }
+
+    </div>
+</div>
+
+<h3 class="text-success">Product Summary</h3>
+@foreach (var p in @products)
+{
+    <p>@p.Name [@p.Price] is @p.IsActive</p>
+}
+
+@code
+{
+    string selectedProp;
+
+    Product p = new()
+    {
+        Name = "PlayStation 5",
+        Price = 50000.00m,
+        IsActive = false,
+        Properties = new()
+        {
+            new ProductProp { Id = 1, Name = "Storage", Value = "825 GB" },
+            new ProductProp { Id = 2, Name = "Memory", Value = "16 GB DDR4" },
+            new ProductProp { Id = 3, Name = "Drip", Value = "White" },
+        }
+    };
+
+    List<Product> products = new();
+
+    protected override void OnInitialized()
+    {
+        products.Add(new() { Id = 111, Name = "Ninetendo Switch", Price = 38000m, IsActive = true });
+        products.Add(new() { Id = 111, Name = "XBox One X", Price = 55000m, IsActive = true });
+    }
+}

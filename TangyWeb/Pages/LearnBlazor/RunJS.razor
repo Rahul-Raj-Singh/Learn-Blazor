@@ -1,0 +1,60 @@
+@page "/RunJS"
+
+@inject IJSRuntime _jsRuntime
+
+<h2 class="text-primary">Run Javascript</h2>
+
+<div class="row mb-2">
+    <div class="col">
+        <p>Confirmation: @IsConfirmed</p>
+        <button class="btn text-white btn-info w" @onclick="@TestConfirmBox">Vanilla JS Confirmation</button>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col">
+        <button class="btn btn-success" @onclick="@ToastrSuccess">Toastr Success</button>
+        <button class="btn btn-danger" @onclick="@ToastrError">Toastr Error</button>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col">
+        <button class="btn btn-warning text-white" @onclick="@SweetAlertSuccess">SweetAlert Success</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <p>Confirmation: @IsConfirmed</p>
+        <button class="btn btn-secondary text-white" @onclick="@SweetAlertConfirm">SweetAlert Confirmation</button>
+    </div>
+</div>
+
+
+
+@code
+{
+    public bool IsConfirmed { get; set; }
+
+    private async Task TestConfirmBox()
+    {
+        IsConfirmed = await _jsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+    }
+    private async Task ToastrSuccess()
+    {
+        await _jsRuntime.InvokeVoidAsync("showToast", "success", "Job Done.");
+    }
+    private async Task ToastrError()
+    {
+        await _jsRuntime.InvokeVoidAsync("showToast", "error", "Job Failed !!!");
+    }
+    private async Task SweetAlertSuccess()
+    {
+        await _jsRuntime.InvokeVoidAsync("showAlert", "success", "Save Successful :)");
+    }
+    private async Task SweetAlertConfirm()
+    {
+        IsConfirmed = await _jsRuntime.InvokeAsync<bool>("askConfirmation", "question", "Are you sure you want to save?", "Save", "Cancel");
+    }
+}

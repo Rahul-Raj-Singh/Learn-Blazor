@@ -1,0 +1,9 @@
+<h4 class="text-warning">GrandChild Component</h4>
+
+<p class="alert alert-warning">@MsgFromGradParent</p>
+
+@code
+{
+    [CascadingParameter(Name = "Greet")]
+    public string MsgFromGradParent { get; set; }
+}

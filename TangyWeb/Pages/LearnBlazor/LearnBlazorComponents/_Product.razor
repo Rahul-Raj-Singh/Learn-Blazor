@@ -1,0 +1,49 @@
+<section class="card p-2" @onclick="@HandleProductClick">
+    <p class="lead">Product - @Product.Id</p>
+    <p>Add to Favourite: <input type="checkbox" @onchange="@HandleFavouriteChange" checked="@(false)"></p>
+    <p>Name - @Product.Name</p>
+    <p>Price: <input type="number" @bind-value="@Product.Price" @bind-value:event="oninput" /></p>
+    <p>Show Properties: <input type="checkbox" @bind-value="@Product.IsActive" checked="@Product.IsActive" /></p>
+    <p>Render Fragment from parent: @FirstFragment @SecondFragment</p>
+    @if (@Product.IsActive)
+    {
+        <p>
+            @foreach (var props in @Product.Properties)
+            {
+            <p>@props.Name - @props.Value</p>
+            }
+        </p>
+    }
+
+    <_DeleteEditButton IsActive="@Product.IsActive" />
+
+</section>
+
+@code
+{
+    [Parameter]
+    public Product Product { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> UpdateFavouriteCount { get; set; }
+
+    [Parameter]
+    public EventCallback<int> UpdateProductSelected { get; set; }
+        
+    [Parameter]
+    public RenderFragment FirstFragment { get; set; }
+    
+    [Parameter]
+    public RenderFragment SecondFragment { get; set; }
+
+    public bool IsClicked { get; set; }
+
+    public async Task HandleFavouriteChange(ChangeEventArgs e)
+    {
+        await UpdateFavouriteCount.InvokeAsync((bool) e.Value);
+    }
+    public async Task HandleProductClick(MouseEventArgs e)
+    {
+        await UpdateProductSelected.InvokeAsync(Product.Id);
+    }
+}
