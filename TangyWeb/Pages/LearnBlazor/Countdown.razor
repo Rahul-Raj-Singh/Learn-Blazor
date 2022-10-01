@@ -1,0 +1,60 @@
+@page "/Timer"
+
+@using System.Timers
+
+@implements IDisposable
+
+
+<h2 class="text-primary">Timer (in Sec)</h2>
+
+<h3 class="text-warning">@Seconds</h3>
+
+<p class="d-flex">
+    <button class="btn btn-success" @onclick="@StartTimer">Start</button>    
+    <button class="btn btn-danger" @onclick="@StopTimer">Stop</button>    
+    <button class="btn btn-dark" @onclick="@ResetTimer">Reset</button>    
+</p>
+
+
+@code
+{
+    public int Seconds { get; set; } = 0;
+    public Timer Timer { get; set; }
+
+    private void StartTimer()
+    {
+        Dispose();
+        Timer = new();
+
+        Timer.Enabled = true;
+        Timer.Interval = 1000;
+        Timer.Elapsed += CountdownTimer;
+        Seconds = 0;
+    }
+    private void ResetTimer()
+    {
+        Timer.Enabled = false;
+        Seconds = 0;
+    }
+    private void StopTimer()
+    {
+        Timer.Enabled = false;
+    }
+
+    private void CountdownTimer(object s, ElapsedEventArgs e)
+    {
+        InvokeAsync(() => {
+            Seconds ++;
+            StateHasChanged(); // Force UI to render. Needed since this timer callback runs on different thread
+        });
+    }
+
+    public void Dispose()
+    {
+        Timer?.Dispose();
+    }
+
+}
+
+
+
