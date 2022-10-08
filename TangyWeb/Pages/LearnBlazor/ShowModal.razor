@@ -1,0 +1,30 @@
+@page "/Modal"
+
+@inject ILogger<ShowModal> log
+
+<button class="btn btn-info" @onclick="@OpenModal">Show Modal</button>
+
+@code
+{
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+    private async Task OpenModal()
+    {
+        // Modal input
+        var parameters = new ModalParameters().Add("Context", new Product());
+
+        var modal = Modal.Show<MyModal>(title:"Howdy !!!", parameters: parameters);
+
+        var result = await modal.Result;
+        
+        if (result.Cancelled)
+        {
+            log.LogInformation("Cancelled");
+        }
+        else
+        {
+            log.LogInformation("Confirmed");
+            log.LogInformation(JsonConvert.SerializeObject(result.Data));
+        }
+    }
+}
